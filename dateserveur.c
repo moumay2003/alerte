@@ -23,7 +23,7 @@ int main() {
     inet_aton("127.0.0.1", &(addser.sin_addr));
     memset(&addser.sin_zero, 0, 8);
     
-    // Création du socket
+
     dss = socket(AF_INET, SOCK_STREAM, 0);
     if (dss == -1) {
         perror("socket");
@@ -31,20 +31,20 @@ int main() {
     }
     printf("dss : %d\n", dss);
     
-    // Liaison du socket avec l'adresse
+  
     if (bind(dss, (struct sockaddr *)&addser, sizeof(struct sockaddr)) == -1) {
         perror("bind");
         exit(1);
     }
     
-    // Écoute des connexions entrantes
+   
     if (listen(dss, 10) == -1) {
         perror("listen");
         exit(1);
     }
     printf("Serveur démarré, en attente de clients...\n");
     
-    // Boucle principale pour accepter des connexions
+    
     while (1) {
         dsc = accept(dss, (struct sockaddr *)&addclt, &lgAdrCLT);
         if (dsc == -1) {
@@ -57,23 +57,23 @@ int main() {
             memset(reqt, '\0', 2014);
             recv(dsc, reqt, 2014, 0);
             
-            reqt[strcspn(reqt, "\r\n")] = '\0';  // Supprimer les caractères de nouvelle ligne
+            reqt[strcspn(reqt, "\r\n")] = '\0'; 
             
             if (strcmp(reqt, "DATE") == 0) {
-                // Répondre avec la date actuelle
+              
                 strcpy(rep, asctime(&ladateFmt));
                 send(dsc, rep, strlen(rep), 0);
             }
             if (strcmp(reqt, "exit") == 0) {
-                break; // Quitter la boucle si "exit" est reçu
+                break; 
             }
         }
         
-        close(dsc);  // Fermer la connexion avec le client
+        close(dsc);  
         printf("Client déconnecté\n");
     }
     
-    // Fermeture du socket principal et libération de la mémoire
+   
     close(dss);
     free(reqt);
     free(rep);

@@ -33,13 +33,25 @@
   while(1){
     dsc=accept(dss,(struct sockaddr *)&addCLT,&lgAdrCLT);
     printf ("nouveau clien connecté du server\n");
-    while(1){
-        memset(reqt,'\0',2014);
-        recv(dsc,reqt,2014,0);
-        strcpy(reps,reqt);
-        send(dsc,reps,strlen(reps),0);
-        reqt[strcspn(reqt,"\r")]='\0';  reqt[strcspn(reqt,"\n")]='\0';
-        if(strcmp(reqt,"exit")==0) break;
+     
+     if(fork()!=0){
+         close(dsc);
+
+     }
+
+    else{
+         close(dss) ;
+         while(1){
+             memset(reqt,'\0',2014);
+             recv(dsc,reqt,2014,0);
+             strcpy(reps,reqt);
+             send(dsc,reps,strlen(reps),0);
+             reqt[strcspn(reqt,"\r")]='\0';  reqt[strcspn(reqt,"\n")]='\0';
+             if(strcmp(reqt,"exit")==0) break;
+
+
+
+
 
 
     }
@@ -47,9 +59,10 @@
      printf("client deconnecté\n");
 
   }
-   close(dss);
-   return EXIT_SUCCESS;
-  
+   
   
 
  }
+ close(dss);
+   return EXIT_SUCCESS;
+   }
