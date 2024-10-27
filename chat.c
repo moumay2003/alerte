@@ -35,6 +35,8 @@
     printf ("nouveau clien connecté du server\n");
      
      if(fork()!=0){
+        send(dsc,reps,strlen(reps),0);
+
          close(dsc);
      }
 
